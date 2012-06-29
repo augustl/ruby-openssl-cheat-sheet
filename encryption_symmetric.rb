@@ -1,6 +1,12 @@
 # Symmetric crypto lets you scramble some data with one shared key. It is faster
 # than asymmetric crypto, but has the downside that you can only share the data
-# with trusted parties, so the key has to be pre-shared somehow, unlike async
+# with trusted parties, so the key has to be pre-shared somehow, unlike asymmetric
+# crypto.
+#
+# Note that a common method for fast cryptography is to first connect with the
+# slower asymmetric crypto, then use that connection to exchange a shared secret
+# for symmetric crypto. HTTPS and SSL sockets use this method. This means you get
+# the full additional security from asymmetric crypto, but the speed of symmetric
 # crypto.
 
 require "openssl"
