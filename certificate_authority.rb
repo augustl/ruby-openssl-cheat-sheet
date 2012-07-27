@@ -4,10 +4,10 @@
 
 require "openssl"
 
-# Generate your CA first. A CA is not special, it's just a private key and
-# a certificate like any other. The only difference is that the certificate
-# is used to sign other certificates.
 
+# Generating the CA is a one time only operation. Once you have the private
+# key and certificate files, you will reuse those for future signing
+# operations
 ca_passphrase = "verysecret"
 ca_keypair = OpenSSL::PKey::RSA.new(2048)
 File.open("/tmp/ca.pem", "w+") do |f|
@@ -31,17 +31,20 @@ File.open("/tmp/ca.crt", "w+") do |f|
   f.write ca_cert.to_pem
 end
 
-# Your CA is now ready to go. You can sign other certificates with it.
 
-# Let's create a certificate and sign it with out CA. Since a certificate
-# can be boiled down to "a public key with metadata and expiration date",
-# we need a keypair for our new cert (just like we did for the CA cert above).
+# ... or if you've already generated the CA, open it
+ca_keypair = OpenSSL::PKey::RSA.new(File.read("/tmp/ca.pem"), ca_passphrase)
+ca_cert = OpenSSL::X509::Certificate.new(File.read("/tmp/ca.crt"))
+
+# Signing a certificate with a CA is very similar to the steps above, since
+# the only difference between a CA and a signed certificate is that the latter
+# is, well, signed.
 our_cert_keypair = OpenSSL::PKey::RSA.new(2048)
 
-# The signing request is what you typically ship to the certificate authority.
-# This file contains the public key of your keypair, and lets the CA issue a
-# cert to you without ever sending them your private key, and without you ever
-# seeing their private key.
+# Signing requests are what you deliver to a CA for signing. Usually, the CA
+# and the requester isn't in the same process like in this demo. The signing
+# request contains the public key and the metadata you want to have for your
+# certificate.
 our_cert_req = OpenSSL::X509::Request.new
 our_cert_req.subject = OpenSSL::X509::Name.new([
     ["C", "NO"],
