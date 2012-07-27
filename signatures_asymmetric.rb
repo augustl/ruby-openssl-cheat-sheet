@@ -34,9 +34,9 @@ pub_key = keypair.public_key
 # You can read the file from disk, you probably didn't have the keypair available post creation like we have in this example.
 #pub_key = OpenSSL::PKey::RSA.new(File.read("/tmp/ruby-ssl-cheatsheet/our.pub"))
 
-p pub_key.verify(OpenSSL::Digest::SHA256.new, signature, data)
+p pub_key.verify(digest, signature, data)
 # => true
-p pub_key.verify(OpenSSL::Digest::SHA256.new, signature, data + "altered")
+p pub_key.verify(digest, signature, data + "altered")
 # => false
-p pub_key.verify(OpenSSL::Digest::SHA256.new, "altered" + signature, data)
+p pub_key.verify(digest, "altered" + signature, data)
 # => false
