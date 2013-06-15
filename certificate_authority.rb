@@ -29,6 +29,7 @@ ca_cert.public_key = ca_keypair.public_key
 ef = OpenSSL::X509::ExtensionFactory.new
 ef.subject_certificate = ca_cert
 ef.issuer_certificate = ca_cert
+# Read more about the various extensions here: http://www.openssl.org/docs/apps/x509v3_config.html
 ca_cert.add_extension(ef.create_extension("basicConstraints", "CA:TRUE", true))
 ca_cert.add_extension(ef.create_extension("keyUsage","keyCertSign, cRLSign", true))
 ca_cert.add_extension(ef.create_extension("subjectKeyIdentifier", "hash", false))
