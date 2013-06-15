@@ -26,6 +26,13 @@ ca_cert.subject = OpenSSL::X509::Name.new([
 ca_cert.not_after = Time.now + 1000000000 # 40 or so years
 ca_cert.serial = 1
 ca_cert.public_key = ca_keypair.public_key
+ef = OpenSSL::X509::ExtensionFactory.new
+ef.subject_certificate = ca_cert
+ef.issuer_certificate = ca_cert
+ca_cert.add_extension(ef.create_extension("basicConstraints", "CA:TRUE", true))
+ca_cert.add_extension(ef.create_extension("keyUsage","keyCertSign, cRLSign", true))
+ca_cert.add_extension(ef.create_extension("subjectKeyIdentifier", "hash", false))
+ca_cert.add_extension(ef.create_extension("authorityKeyIdentifier", "keyid:always", false))
 
 File.open("/tmp/ca.crt", "w+") do |f|
   f.write ca_cert.to_pem
