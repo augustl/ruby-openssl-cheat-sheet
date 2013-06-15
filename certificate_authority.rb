@@ -20,7 +20,7 @@ ca_cert.subject = OpenSSL::X509::Name.new([
     ["C", "NO"],
     ["ST", "Oslo"],
     ["L", "Oslo"],
-    ["O", "August Lilleaas"]
+    ["CN", "August Lilleaas"]
   ])
 # All issued certs will be unusuable after this time.
 ca_cert.not_after = Time.now + 1000000000 # 40 or so years
