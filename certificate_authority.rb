@@ -82,6 +82,12 @@ our_cert.serial = 123 # Should be an unique number, the CA probably has a databa
 our_cert.public_key = our_cert_req.public_key
 our_cert.sign ca_keypair, OpenSSL::Digest::SHA1.new
 
+# To make the certificate valid for both wildcard and top level domain name, we need an extension.
+ef = OpenSSL::X509::ExtensionFactory.new
+ef.subject_certificate = our_cert
+ef.issuer_certificate = ca_cert
+our_cert.add_extension(ef.create_extension("subjectAltName", "DNS:augustl.com, DNS:*.augustl.com", false))
+
 # You now have a certificate signed by another certificate, in other words you
 # created your own certificate authority. Congrats! Use our_cert.to_pem and write
 # it to a file in order to ship it to the certificate requester.
