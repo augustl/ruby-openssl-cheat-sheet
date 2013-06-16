@@ -22,6 +22,7 @@ ca_cert.subject = OpenSSL::X509::Name.new([
     ["L", "Oslo"],
     ["CN", "August Lilleaas"]
   ])
+ca_cert.issuer = ca_cert.subject
 # All issued certs will be unusuable after this time.
 ca_cert.not_after = Time.now + 1000000000 # 40 or so years
 ca_cert.serial = 1
@@ -81,13 +82,13 @@ our_cert.not_before = Time.now
 our_cert.not_after = Time.now + 100000000 # 3 or so years.
 our_cert.serial = 123 # Should be an unique number, the CA probably has a database.
 our_cert.public_key = our_cert_req.public_key
-our_cert.sign ca_keypair, OpenSSL::Digest::SHA1.new
 
 # To make the certificate valid for both wildcard and top level domain name, we need an extension.
 ef = OpenSSL::X509::ExtensionFactory.new
 ef.subject_certificate = our_cert
 ef.issuer_certificate = ca_cert
 our_cert.add_extension(ef.create_extension("subjectAltName", "DNS:augustl.com, DNS:*.augustl.com", false))
+our_cert.sign ca_keypair, OpenSSL::Digest::SHA1.new
 
 # You now have a certificate signed by another certificate, in other words you
 # created your own certificate authority. Congrats! Use our_cert.to_pem and write
