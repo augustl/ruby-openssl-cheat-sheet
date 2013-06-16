@@ -35,6 +35,7 @@ ca_cert.add_extension(ef.create_extension("basicConstraints", "CA:TRUE", true))
 ca_cert.add_extension(ef.create_extension("keyUsage","keyCertSign, cRLSign", true))
 ca_cert.add_extension(ef.create_extension("subjectKeyIdentifier", "hash", false))
 ca_cert.add_extension(ef.create_extension("authorityKeyIdentifier", "keyid:always", false))
+ca_cert.sign(ca_keypair, OpenSSL::Digest::SHA256.new)
 
 File.open("/tmp/ca.crt", "w+") do |f|
   f.write ca_cert.to_pem
