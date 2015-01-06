@@ -19,7 +19,7 @@ our_cert_req.sign our_cert_keypair, OpenSSL::Digest::SHA1.new
 # Send this file to the CA! There's probably a textarea in a form where
 # they want you to paste in the certificate request - this is it.
 File.open("/tmp/req.txt", "w+") do |f|
-  f.write ca_cert.to_pem
+  f.write our_cert_req.to_pem
 end
 
 # And we're done! You'll get the certificate itself from the CA, obviously.
