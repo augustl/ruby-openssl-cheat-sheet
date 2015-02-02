@@ -28,15 +28,21 @@ cipher = OpenSSL::Cipher::AES.new(128, :CBC)
 cipher.encrypt
 
 cipher.key = secret
+
+# Many ciphers uses an initialization vector (IV) to randomize encryption. IVs should be unpredictable.
+# See Ruby docs for more info: http://ruby-doc.org/stdlib-2.2.0/libdoc/openssl/rdoc/OpenSSL/Cipher.html#class-OpenSSL::Cipher-label-Choosing+an+IV
+iv = cipher.random_iv
+
 encrypted = cipher.update(data) + cipher.final
-p encrypted
+p iv + encrypted
 # => ...some unreadable binary stuff...
 
 # Time to decrypt it. We need to create a new object.
 decipher = OpenSSL::Cipher::AES.new(128, :CBC)
 decipher.decrypt
 decipher.key = secret
+decipher.iv = encrypted[0..16] # In some modes like CTR you wouldn't be able to decrypt without proper IV setup
 
-decrypted = decipher.update(encrypted) + decipher.final
+decrypted = decipher.update(encrypted[16..-1]) + decipher.final
 p decrypted
 # => "This is some data"
