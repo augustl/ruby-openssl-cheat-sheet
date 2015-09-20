@@ -15,7 +15,7 @@ our_cert_req.subject = OpenSSL::X509::Name.new([
     ["CN", "*.augustl.com"]
   ])
 our_cert_req.public_key = our_cert_keypair.public_key
-our_cert_req.sign our_cert_keypair, OpenSSL::Digest::SHA1.new
+our_cert_req.sign our_cert_keypair, OpenSSL::Digest::SHA256.new
 
 # Send this file to the CA! There's probably a textarea in a form where
 # they want you to paste in the certificate request - this is it.
