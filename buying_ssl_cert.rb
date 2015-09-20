@@ -1,3 +1,4 @@
+require "openssl"
 # When you buy SSL certs from a CA, you can either memorize the impossible
 # to memorize OpenSSL CLI, or use the logical and sound Ruby API.
 
